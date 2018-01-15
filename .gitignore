@@ -1,0 +1,6 @@
+# Project
+node_modules/
+public/assets
+
+# Operating System
+.DS_Store
