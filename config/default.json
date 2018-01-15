@@ -1,6 +1,6 @@
 {
-    "appSecret": "b20e9dc87a7488f9c95a15a6c0f2b153",
-    "pageAccessToken": "EAAbQlgZAuUO0BAFdwHaBA9yiN0oWHkpqVZBsRlS7TyfpvNZBwoI2kVeDJSpZAgw22ewkvxKFyYT5PvZBuYSJtrZAQsLZBQPNi0ZCMoPBuF7Sx2D7gR6Ct4fdl53oMbwZA42qR4xh3GT4XidUsXfQv1ZC76h9vdmTX4CSjDDtQisjrQVwZDZD",
-    "validationToken": "TOKEN",
+    "appSecret": "some-app-secret",
+    "pageAccessToken": "some-access-token",
+    "validationToken": "soke-validation-token",
     "serverURL": "to_be_set_manually"
 }
