@@ -4,7 +4,10 @@
       "type"      : "httpTrigger",
       "direction" : "in",
       "name"      : "req",
-      "route"     : "{*segments}"
+      "route"     : "{*segments}",
+      "methods": [
+        "get", "post"
+      ]
     }, {
       "type"      : "http",
       "direction" : "out",
