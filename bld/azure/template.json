@@ -110,6 +110,10 @@
               "name": "SCM_USE_FUNCPACK",
               "value": "1"
             },
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "7.2.0"
+            },
 
             {
               "name": "MESSENGER_APP_SECRET",
@@ -128,7 +132,7 @@
               "value": "[concat('https://', variables('hostName'), '/')]"
             }
           ],
-          "nodeVersion": "6.5.0",
+          "nodeVersion": "7.2.0",
           "phpVersion": "",
           "httpLoggingEnabled": true,
           "logsDirectorySizeLimit": 35,
