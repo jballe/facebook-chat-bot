@@ -151,7 +151,7 @@
           "properties": {
             "RepoUrl": "[parameters('repoUrl')]",
             "branch": "[parameters('repoBranch')]",
-            "IsManualIntegration": "true",
+            "IsManualIntegration": "false",
             "mode": "Complete",
             "scmMode": "GitHub"
           }
