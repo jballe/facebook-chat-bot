@@ -1,6 +1,7 @@
 # Project
 node_modules/
 public/assets
+.funcpack/
 
 # Operating System
 .DS_Store
