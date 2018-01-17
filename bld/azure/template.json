@@ -6,10 +6,6 @@
       "type": "string",
       "defaultValue": "jespers-facebook-bot"
     },
-    "storageTier": {
-      "type": "string",
-      "defaultValue": "Standard"
-    },
     "storageSku": {
       "type": "string",
       "defaultValue": "Standard_LRS",
@@ -106,6 +102,16 @@
               "value": "[toLower(variables('siteName'))]"
             },
             {
+              "name": "FUNCTION_APP_EDIT_MODE",
+              "value": "readonly"
+            },
+
+            {
+              "name": "SCM_USE_FUNCPACK",
+              "value": "1"
+            },
+
+            {
               "name": "MESSENGER_APP_SECRET",
               "value": "[parameters('messengerAppSecret')]"
             },
@@ -120,10 +126,6 @@
             {
               "name": "SERVER_URL",
               "value": "[concat('https://', variables('hostName'), '/')]"
-            },
-            {
-              "name": "FUNCTION_APP_EDIT_MODE",
-              "value": "readonly"
             }
           ],
           "nodeVersion": "6.5.0"
