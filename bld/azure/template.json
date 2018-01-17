@@ -1,0 +1,156 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string",
+      "defaultValue": "jespers-facebook-bot"
+    },
+    "storageTier": {
+      "type": "string",
+      "defaultValue": "Standard"
+    },
+    "storageSku": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": ["Standard_LRS", "Standard_GRS", "Standard_RAGRS"]
+    },
+
+    "repoUrl": {
+      "type": "string",
+      "defaultValue": "https://github.com/jballe/facebook-chat-bot.git"
+    },
+    "repoBranch": {
+      "type": "string",
+      "defaultValue": "master"
+    },
+
+    "messengerAppSecret": {
+      "type": "string"
+    },
+    "messengerPageAccessToken": {
+      "type": "string"
+    },
+    "messengerValidationToken": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "planName": "[concat(parameters('name'), '-plan')]",
+    "siteName": "[parameters('name')]",
+    "insightsName": "[parameters('name')]",
+    "storageName": "[replace(parameters('name'), '-', '')]",
+    "storageId":"[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageName'))]",
+    "hostName": "[concat(parameters('name'), '.azurewebsites.net')]"
+  },
+  "resources": [
+    {
+      "type": "microsoft.insights/components",
+      "kind": "web",
+      "name": "[variables('insightsName')]",
+      "apiVersion": "2014-04-01",
+      "location": "[resourceGroup().location]",
+      "scale": null,
+      "properties": {
+        "ApplicationId": "[parameters('name')]"
+      },
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "[parameters('storageSku')]"
+      },
+      "kind": "Storage",
+      "name": "[variables('storageName')]",
+      "apiVersion": "2017-06-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "name": "[variables('planName')]",
+      "apiVersion": "2015-04-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "name": "[variables('planName')]",
+        "computeMode": "Dynamic",
+        "sku": "Dynamic"
+      },
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "kind": "functionapp",
+      "name": "[variables('siteName')]",
+      "apiVersion": "2016-08-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('planName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "AzureWebJobsDashboard",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(variables('storageId'),'2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(variables('storageId'),'2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(variables('storageId'),'2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "WEBSITE_CONTENTSHARE",
+              "value": "[toLower(variables('siteName'))]"
+            },
+            {
+              "name": "MESSENGER_APP_SECRET",
+              "value": "[parameters('messengerAppSecret')]"
+            },
+            {
+              "name": "MESSENGER_PAGE_ACCESS_TOKEN",
+              "value": "[parameters('messengerPageAccessToken')]"
+            },
+            {
+              "name": "MESSENGER_VALIDATION_TOKEN",
+              "value": "[parameters('messengerValidationToken')]"
+            },
+            {
+              "name": "SERVER_URL",
+              "value": "[concat('https://', variables('hostName'), '/')]"
+            },
+            {
+              "name": "FUNCTION_APP_EDIT_MODE",
+              "value": "readonly"
+            }
+          ],
+          "nodeVersion": "6.5.0"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('planName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+      ]
+      ,
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites/', variables('siteName'))]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('repoUrl')]",
+            "branch": "[parameters('repoBranch')]",
+            "IsManualIntegration": "true",
+            "mode": "Complete",
+            "scmMode": "GitHub"
+          }
+        }
+      ]
+    }
+  ]
+}
