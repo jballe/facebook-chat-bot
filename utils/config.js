@@ -1,8 +1,12 @@
 
+/*
 const fs = require('fs');
 const cfgPath = __dirname + '/../config/default.json';
 const cfgExists = fs.existsSync(cfgPath);
 const cfg = cfgExists ? require(cfgPath) : {};
+*/
+const cfg = {};
+
 
 // App Secret can be retrieved from the App Dashboard
 const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ?
